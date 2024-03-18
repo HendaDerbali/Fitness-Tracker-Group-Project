@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 
+
 const fitness = new mongoose.Schema(
+    
     {
         Duration:{
             type:Number,
@@ -23,12 +25,10 @@ const fitness = new mongoose.Schema(
             enum: ["walking", "running", "cycling", "swimming"],
             default : null
         } ,
-        likes: {
-            type:Number,
-            default :0,
-            type: mongoose.Schema.Types.ObjectId,
-            ref :"User"
-        } 
+       // UserOwner: {
+          //  type: [UserSchema],
+            //required: [true, "Reviews are required."],
+          //},   
     },{timestamps:true}
 );
 

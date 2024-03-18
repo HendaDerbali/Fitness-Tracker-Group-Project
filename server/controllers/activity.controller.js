@@ -19,7 +19,7 @@ module.exports.CreateNewActivity = async (req, res) => {
           Duration: req.body.Duration,
           Distance: req.body.Distance,
           Intensity: req.body.Intensity,
-          CaloriesBurned: req.body.Intensity,
+          CaloriesBurned: req.body.CaloriesBurned,
           ActivityChecked: req.body.ActivityChecked,
           
         });
