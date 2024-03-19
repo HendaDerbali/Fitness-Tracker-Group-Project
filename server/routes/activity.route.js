@@ -1,11 +1,10 @@
-const Activitycontroller=require("../controllers/activity.controller");
+const Activitycontroller = require("../controllers/activity.controller");
 const verifyToken = require("../middelwares/userMiddelware");
 
 module.exports=(app)=>{
-    app.use(verifyToken)
-    app.get("/api/activity",Activitycontroller.GetAllActivitys)
-    app.get("/api/activity/:ActivityId", Activitycontroller.FindOneSingleActivity)
-    app.put("/api/activity/:ActivityId", Activitycontroller.updateExistingActivity)
-    app.post("/api/activity", Activitycontroller.CreateNewActivity)
-    app.delete("/api/activity/:ActivityId", Activitycontroller.deleteAnExistingActivity)
+    app.get("http://localhost:5000/activity" ,verifyToken,Activitycontroller.GetAllActivitys)
+    app.get("http://localhost:5000/activity/:ActivityId" ,verifyToken ,Activitycontroller.FindOneSingleActivity)
+    app.put("http://localhost:5000/activity/:ActivityId" ,verifyToken ,Activitycontroller.updateExistingActivity)
+    app.post("http://localhost:5000/activity", verifyToken, Activitycontroller.CreateNewActivity)
+    app.delete("http://localhost:5000/activity/:ActivityId", verifyToken ,Activitycontroller.deleteAnExistingActivity)
 }

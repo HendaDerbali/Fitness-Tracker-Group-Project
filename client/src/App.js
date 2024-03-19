@@ -1,28 +1,24 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import { Route, Routes } from 'react-router-dom'
-import LoginAndRegistration from'./views/LoginAndRegistration'
 import Home from'./views/Home'
-import { Register } from './views/Register';
+import Register from './views/Register'
+import Login from './views/Login'
 
 
 
 function App() {
-  return (
-    <div className="App">
-        
-        <Routes>
+  return (<div className='bg-light' style={{ height: '100vh', width: '100vw' }}>
+<Routes>
 
-{/* Login-Registration  page */}
-<Route path="/" element={<Register/>} />
+<Route path="/" element={<Register/>} default />
 
-{/* Home  page */}
+<Route path="/login" element={<Login/>} />
+
 <Route path="/home" element={<Home/>} />
 
-
-
 </Routes>
-    </div>
+</div>
   );
 }
 

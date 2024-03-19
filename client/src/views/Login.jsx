@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 
-const Auth = () => {
+const Login = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         firstName: '',
@@ -15,17 +15,11 @@ const Auth = () => {
     });
 
     const [formErrors, setFormErrors] = useState({});
-
-
     const validateLoginForm = () => {
         const errors = {};
-
-        // Validate email
         if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
             errors.email = 'Please enter a valid email address';
         }
-
-        // Validate password
         if (formData.password.length < 8) {
             errors.password = 'Password must be at least 8 characters';
         }
@@ -43,50 +37,46 @@ const Auth = () => {
         }
 
         try {
-            const response = await axios.post('http://localhost:8000/api/login', formData);
-
+            const response = await axios.post('http://localhost:5000/user/login', formData);
             const token = response.data.token;
             const { firstName, lastName, _id } = response.data.user
 
-            // Save the token in localStorage
             localStorage.setItem('authToken', token);
             localStorage.setItem('user', JSON.stringify({ firstName, lastName, _id }));
             navigate('/home')
-            // Store the token in localStorage or a state management library
-            // Redirect or show success message
+
         } catch (error) {
             console.error(error.response.data.message);
-            // Handle error (show error message or redirect)
+            setFormErrors({ email: error.response.data.message });
         }
 
     };
 
     return (
-        <div>
-            
-
-            <h2>Login</h2>
-            <form onSubmit={handleLoginSubmit}>
+        <div className='pt-5 container-sm' style={{width: '500px'}}>
+            <form onSubmit={handleLoginSubmit} className='shadow form-control p-5 d-flex text-center justify-content-center align-items-center flex-column border border-1'>
                 <div>
-                    <label>
+                <h2 className='display-4 fw-semibold pb-3'>Login</h2>
+                    <label className='d-flex flex-column gap-2 fw-semibold form-label'>
                         Email:
-                        <input type="email" name="email" onChange={(e) => setFormData({ ...formData, email: e.target.value })} required />
+                        <input className='form-control' style={{width: '250px'}} type="email" name="email" onChange={(e) => setFormData({ ...formData, email: e.target.value })}/>
                     </label>
-                    {formErrors.email && <p className="error">{formErrors.email}</p>}
+                    {formErrors.email && <p className="text-danger">{formErrors.email}</p>}
                 </div>
                 <br />
                 <div>
-                    <label>
+                    <label className='d-flex flex-column gap-2 fw-semibold form-label'>
                         Password:
-                        <input type="password" name="password" onChange={(e) => setFormData({ ...formData, password: e.target.value })} required />
+                        <input className='form-control' style={{width: '250px'}} type="password" name="password" onChange={(e) => setFormData({ ...formData, password: e.target.value })}/>
                     </label>
-                    {formErrors.password && <p className="error">{formErrors.password}</p>}
+                    {formErrors.password && <p className="text-danger">{formErrors.password}</p>}
                 </div>
                 <br />
-                <button type="submit">Login</button>
+                <p>New here? <a href="/">Register</a></p>
+                <button type="submit" className='btn btn-success w-100 fw-semibold'>Login</button>
             </form>
         </div>
     );
 };
 
-export default Auth;
+export default Login;
