@@ -47,7 +47,7 @@ import { useNavigate } from 'react-router-dom';
             return;
         }
         try {
-            const res = await axios.post('http://localhost:5000/user/register', formData);
+            const res = await axios.post('http://localhost:8000/user/register', formData);
             console.log(res.data)
             navigate('/login');
 

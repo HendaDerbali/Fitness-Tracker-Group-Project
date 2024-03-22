@@ -5,7 +5,7 @@ const Logout = () => {
   const Nav = useNavigate();
   const logmeout = () => {
     axios
-      .post("http://localhost:5000/user/logout")
+      .post("http://localhost:8000/user/logout")
       .then((res) => {
         window.localStorage.removeItem("authToken");
         window.localStorage.removeItem("user");
@@ -20,7 +20,7 @@ const Logout = () => {
   }
 
   return (
-    <div>
+    <div className='position-absolute top-0 end-0 me-5'>
       <button
         className="btn btn-secondary ms-5 mt-5"
         onClick={() => logmeout()}>

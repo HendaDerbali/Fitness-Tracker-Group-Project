@@ -8,7 +8,8 @@ import Login from './views/Login'
 
 
 function App() {
-  return (<div className='bg-light' style={{ height: '100vh', width: '100vw' }}>
+  return (<div className='bg-light' style={{ height: '100vh', width: '100%' }}>
+
 <Routes>
 
 <Route path="/" element={<Register/>} default />

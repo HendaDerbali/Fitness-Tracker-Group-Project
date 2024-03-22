@@ -37,7 +37,7 @@ const Login = () => {
         }
 
         try {
-            const response = await axios.post('http://localhost:5000/user/login', formData);
+            const response = await axios.post('http://localhost:8000/user/login', formData);
             const token = response.data.token;
             const { firstName, lastName, _id } = response.data.user
 
