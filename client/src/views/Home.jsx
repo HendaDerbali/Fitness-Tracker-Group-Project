@@ -3,6 +3,7 @@ import Logout from '../components/Logout';
 import { useState, useEffect } from 'react';
 import Model from 'react-modal'
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 export const Home = () => {
   const user = JSON.parse(localStorage.getItem('user'))
@@ -115,8 +116,8 @@ export const Home = () => {
           <p className='mt-5 pb-1 display-6 fw-semibold border-bottom'>{currentUser.firstName} {currentUser.lastName}</p>
           <p className='fw-semibold'>"This is my bio"</p>
           <div>
-          <button></button>
-          <button></button>
+          <Link to="/new-activities">Add a Goal</Link> <br/>
+          <Link to="/users">All Users</Link>
           </div>
         </div>
         <div className='border m-5 container border-black shadow'>

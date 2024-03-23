@@ -34,13 +34,11 @@ module.exports.CreateNewActivity = async (req, res) => {
   
         console.log(savedActivity);
         res.json({ newActivity: savedActivity });
-      } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: "Internal Server Error" });
-      }
+      } catch(err) {
+        res.status(400).json(err);
+  }; 
     });
   };
-  
 //read all 
 module.exports.GetAllActivitys = (req, res) => {
  

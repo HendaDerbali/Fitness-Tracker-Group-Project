@@ -4,6 +4,7 @@ import { Route, Routes } from 'react-router-dom'
 import Home from'./views/Home'
 import Register from './views/Register'
 import Login from './views/Login'
+import { Create } from './components/Create';
 
 
 
@@ -17,6 +18,9 @@ function App() {
 <Route path="/login" element={<Login/>} />
 
 <Route path="/home" element={<Home/>} />
+
+<Route path="/new-activities" element={<Create/>} />
+
 
 </Routes>
 </div>
