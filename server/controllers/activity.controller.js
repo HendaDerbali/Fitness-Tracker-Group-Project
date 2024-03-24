@@ -2,6 +2,8 @@ const fitnessSchema = require("../models/activity.model");
 const verifyToken = require("../middelwares/userMiddelware");
 const User = require("../models/user.model");
 
+
+
 //create new Activity 
 module.exports.CreateNewActivity = async (req, res) => {
     // Use the verifyToken middleware to protect this route
@@ -20,7 +22,8 @@ module.exports.CreateNewActivity = async (req, res) => {
           Intensity: req.body.Intensity,
           CaloriesBurned: req.body.CaloriesBurned,
           ActivityChecked: req.body.ActivityChecked,
-          
+          Owner: req.body.Owner
+
         });
   
         // Save the new Activity

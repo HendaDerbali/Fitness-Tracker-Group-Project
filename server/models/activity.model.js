@@ -1,4 +1,7 @@
 const mongoose = require("mongoose");
+// Import User Model
+//const userSchema = require("./user.model");
+
 
 const fitness = new mongoose.Schema(
     {
@@ -26,6 +29,11 @@ const fitness = new mongoose.Schema(
             enum: ["walking", "running", "cycling", "swimming"],
             default: "walking"
         },
+        // User Model
+        Owner: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        }
     },
     { timestamps: true }
 );

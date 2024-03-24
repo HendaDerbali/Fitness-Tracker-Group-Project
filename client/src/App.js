@@ -5,6 +5,7 @@ import Home from'./views/Home'
 import Register from './views/Register'
 import Login from './views/Login'
 import {Create} from './views/Create'
+import { Dashboard } from './views/Dashboard';
 
 
 
@@ -20,6 +21,9 @@ function App() {
 <Route path="/home" element={<Home/>} />
 
 <Route path="/new-activities" element={<Create/>} />
+
+<Route path="/users" element={<Dashboard/>} />
+
 
 
 </Routes>

@@ -23,6 +23,7 @@ export const Create = () => {
     Distance: "",
     CaloriesBurned: "",
     ActivityChecked: "walking",
+    Owner: user._id,
   });
 
   const uploadProfilePic = (e) => {
@@ -78,13 +79,16 @@ export const Create = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:8000/activity",
+        "http://localhost:8000/activity/",
+        //`http://localhost:8000/activity/${user._id}`,
+
         {
           Duration: activityForm.Duration,
           Distance: activityForm.Distance,
           Intensity: activityForm.Intensity,
           CaloriesBurned: activityForm.CaloriesBurned,
           ActivityChecked: activityForm.ActivityChecked,
+          Owner: currentUser._id,
         },
         {
           headers: {
