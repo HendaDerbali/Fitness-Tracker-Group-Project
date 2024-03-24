@@ -13,6 +13,8 @@ const fitness = new mongoose.Schema(
         Intensity: {
             required: [true, "Intensity is required"],
             type: String,
+            enum: ["Minimal", "Moderate", "Hard"],
+            default: "Minimal"
         },
         CaloriesBurned: {
             type: Number,
@@ -22,7 +24,7 @@ const fitness = new mongoose.Schema(
         ActivityChecked: {
             type: String,
             enum: ["walking", "running", "cycling", "swimming"],
-            default: null
+            default: "walking"
         },
     },
     { timestamps: true }

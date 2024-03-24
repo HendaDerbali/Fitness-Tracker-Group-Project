@@ -6,14 +6,15 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 
 export const Home = () => {
+  // const [bio, setBio] = useState('');
   const user = JSON.parse(localStorage.getItem('user'))
   const [profilePic, setProfilePic] = useState(null);
-  // const [bio, setBio] = useState('');
   const [loading, setLoading] = useState(true);
   const token = localStorage.getItem('authToken')
   const [visible, setVisible] = useState(false)
   const [errors, setErrors] = useState({})
   const [currentUser, setCurrentUser] = useState({})
+  const [isHovered, setIsHovered] = useState(false);
   const reload = () => window.location.reload();
 
 
@@ -69,11 +70,10 @@ export const Home = () => {
 
   return (
     <div className='p-5'>
-      <Logout />
       <div className='container-fluid d-flex justify-content-between border border-black bg-white shadow' style={{ height: '100vh', width:"70%" }}>
-        <div className='d-flex flex-column mt-5 text-center align-content-center' style={{ width: '50%' }}>
-          <span className='ms-5 border rounded-circle border-black shadow' style={{height:"28vh", width:"15vw"}}>{ profilePic ? (<img className='d-flex justify-content-center border rounded-circle' alt='' src={`http://localhost:8000/public/images/${profilePic}`} style={{height:"100%", width:"100%", object:"fill"}} />) : (<img className='d-flex justify-content-center border rounded-circle' alt='' src={`http://localhost:8000/public/images/circled-user-icon-user-pro-icon-11553397069rpnu1bqqup.png`} style={{height:"100%", width:"100%", object:"fill"}} />)}
-            <button className='border-0 shadow fw-bold rounded-circle border-black text-center text-white bg-transparent' style={{position: "relative", top:"-13%", height:"50px", width:"50px"}} onClick={() => setVisible(true)} name='profilePic'>+</button>
+        <div className='d-flex flex-column mt-5 text-center align-content-center ms-4' style={{ width: '50%' }}>
+          <span className='ms-5 border rounded-circle border-black shadow' style={{height:"28vh", width:"15vw"}}>{ profilePic ? (<img className='d-flex justify-content-center border rounded-circle' alt='' src={`http://localhost:8000/public/images/${profilePic}`} style={{height:"100%", width:"100%", object:"fill"}} />) : (<img className='d-flex justify-content-center border rounded-circle' alt='' src={`http://localhost:8000/public/images/circled-user-icon-user-pro-icon-11553397069rpnu1bqqup.png`} style={{height:"100%", width:"100%", objectFit:"cover"}} />)}
+            <button className='border-0 shadow fw-bold rounded-circle border-black text-center text-white mask' style={{position: "relative", top:"-13%", height:"50px", width:"50px", background: "linear-gradient(45deg, hsla(168, 85%, 52%, 0.5), hsla(263, 88%, 45%, 0.5))", transition: "background 0.3s ease, transform 0.3s ease", transform: isHovered ? "scale(1.1)" : "scale(1)"}} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)} onClick={() => setVisible(true)} name='profilePic'>+</button>
             <Model
             ariaHideApp={false}
             isOpen={visible}
@@ -115,9 +115,10 @@ export const Home = () => {
             </span>
           <p className='mt-5 pb-1 display-6 fw-semibold border-bottom'>{currentUser.firstName} {currentUser.lastName}</p>
           <p className='fw-semibold'>"This is my bio"</p>
-          <div>
+          <div className='mt-5'>
           <Link to="/new-activities">Add a Goal</Link> <br/>
           <Link to="/users">All Users</Link>
+          <Logout />
           </div>
         </div>
         <div className='border m-5 container border-black shadow'>

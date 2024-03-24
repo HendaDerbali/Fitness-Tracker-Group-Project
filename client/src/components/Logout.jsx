@@ -20,9 +20,9 @@ const Logout = () => {
   }
 
   return (
-    <div className='position-absolute top-0 end-0 me-5'>
+    <div className=''>
       <button
-        className="btn btn-secondary ms-5 mt-5"
+        className="btn btn-secondary mt-5"
         onClick={() => logmeout()}>
         Logout
       </button>

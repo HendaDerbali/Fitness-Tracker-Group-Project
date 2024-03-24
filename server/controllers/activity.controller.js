@@ -1,7 +1,6 @@
 const fitnessSchema = require("../models/activity.model");
 const verifyToken = require("../middelwares/userMiddelware");
 const User = require("../models/user.model");
-const { log } = require("console");
 
 //create new Activity 
 module.exports.CreateNewActivity = async (req, res) => {
