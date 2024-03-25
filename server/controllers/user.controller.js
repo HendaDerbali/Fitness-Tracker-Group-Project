@@ -1,6 +1,5 @@
 const User = require("../models/user.model");
-// Import Activity Model
-const fitnessSchema = require("./activity.model");
+const fitnessSchema = require("../models/activity.model");
 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -115,18 +114,15 @@ module.exports = {
   //? Read All
 
   getAllUsers: (req, res) => {
-    fitnessSchema.find()
-      .populate('Owner')
-      .then((allActivities) => {
-        const activitiesWithUsers = allActivities.filter(activity => activity.Owner);
-
-        console.log(allUsers);
-
-        res.json(activitiesWithUsers);
+    User.find()
+      .populate('activities')
+      .then((allUsers) => {
+        const usersWithActivities = allUsers.filter(user => user.activities.length > 0);
+        res.json(usersWithActivities);
       })
       .catch(err => {
-        res.status(500).json({ message: "An error occurred while fetching activities", error: err });
+        res.status(500).json({ message: "An error occurred while fetching users", error: err });
       });
   }
-};
+  }
 

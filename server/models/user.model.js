@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const bcrypt = require('bcrypt');
-// Import Activity Model
 const fitnessSchema = require("./activity.model");
 
 
@@ -37,11 +36,10 @@ const UserSchema = new mongoose.Schema({
       minlength: [3, "bio must be at least 3 characters"],
       maxlength: [245, "bio must be less than 245 characters"],
     },
-  // Activity Model
- // activities: [{
-//     type: mongoose.Schema.Types.ObjectId,
-//     ref: 'Fitness'
-// }]
+    activities: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'fitness'
+}],
   }, {timestamps: true});
 
 UserSchema.virtual('confirmPassword')

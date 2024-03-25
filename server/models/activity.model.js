@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
-// Import User Model
-//const userSchema = require("./user.model");
+const User = require("../models/user.model");
 
 
 const fitness = new mongoose.Schema(
@@ -29,7 +28,6 @@ const fitness = new mongoose.Schema(
             enum: ["walking", "running", "cycling", "swimming"],
             default: "walking"
         },
-        // User Model
         Owner: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User'
@@ -38,49 +36,40 @@ const fitness = new mongoose.Schema(
     { timestamps: true }
 );
 
-// Define a pre-save hook to set duration, intensity, and distance based on the selected activity
+
 fitness.pre('save', function (next) {
-    // Only calculate if ActivityChecked is set
     if (this.ActivityChecked) {
         switch (this.ActivityChecked) {
             case 'walking':
-                // Set duration, intensity, and distance for walking
-                // For example:
                 this.Duration
                 this.Intensity
                 this.Distance
                 break;
+
             case 'running':
-                // Set duration, intensity, and distance for running
-                // For example:
                 this.Duration
                 this.Intensity
                 this.Distance
                 break;
-            //
+
             case 'cycling':
-                // Set duration, intensity, and distance for running
-                // For example:
                 this.Duration
                 this.Intensity
                 this.Distance
                 break;
 
             case 'swimming':
-                // Set duration, intensity, and distance for running
-                // For example:
                 this.Duration
                 this.Intensity
                 this.Distance
                 break;
-            // Add cases for other activities
+                
             default:
-                // Handle default case or invalid activity
                 break;
         }
     }
     next();
 });
 
-const fitnessSchema = mongoose.model("Fitness", fitness);
+const fitnessSchema = mongoose.model("fitness", fitness);
 module.exports = fitnessSchema;

@@ -7,6 +7,5 @@ module.exports=(app)=>{
     app.post ('/user/logout',userController.logout);
     app.patch('/user/profile/:id/image', verifyToken, userController.uploadProfilePicture)
     app.get('/user/:id', verifyToken ,userController.getuser)
-    //Route to get all users (associated with activities)
-    app.get("/api/users", userController.getAllUsers);
+    app.get("/users/activities", verifyToken,userController.getAllUsers);
 }

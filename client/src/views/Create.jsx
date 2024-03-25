@@ -74,7 +74,6 @@ export const Create = () => {
     }
   }, [loading]); //adding the user & token dependencies creates an infinite loop for some reason, will fix later
 
-  //Create Activity :
   const handleCreateActivity = async (e) => {
     e.preventDefault();
     try {
@@ -239,9 +238,7 @@ export const Create = () => {
             <Logout />
           </div>
         </div>
-        {/* Check-Box Form... */}
 
-        {/* Create Form... */}
         <div
           className="d-flex flex-row justify-content-between container border border-black m-5 shadow"
           style={{ position: "relative", right: "0px", height: "90vh" }}
@@ -249,8 +246,6 @@ export const Create = () => {
           <p className="fw-semibold m-5">Track an Activity:</p>
           <div className="d-flex flex-column m-5" style={{ width: "15%" }}>
             <form onSubmit={handleCreateActivity}>
-              {/* Radio buttons */}
-              {/* Input fields with values from activityForm */}
               <div className="d-flex flew-row justify-content-between gap-2 form-control px-2 mb-1">
                 <input
                   type="radio"
