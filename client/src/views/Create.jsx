@@ -18,10 +18,10 @@ export const Create = () => {
   const [currentUser, setCurrentUser] = useState({});
   const [isHovered, setIsHovered] = useState(false);
   const [activityForm, setActivityForm] = useState({
-    Duration: "",
+    Duration: 0,
     Intensity: "Minimal",
-    Distance: "",
-    CaloriesBurned: "",
+    Distance: 0,
+    CaloriesBurned: 0,
     ActivityChecked: "walking",
     Owner: user._id,
   });
@@ -244,7 +244,7 @@ export const Create = () => {
           style={{ position: "relative", right: "0px", height: "90vh" }}
         >
           <p className="fw-semibold m-5">Track an Activity:</p>
-          <div className="d-flex flex-column m-5" style={{ width: "15%" }}>
+          <div className="d-flex flex-column m-5" style={{ width: "18%" }}>
             <form onSubmit={handleCreateActivity}>
               <div className="d-flex flew-row justify-content-between gap-2 form-control px-2 mb-1">
                 <input
@@ -309,16 +309,16 @@ export const Create = () => {
               </div>
 
               <div
-                className="container mt-5 border border-black shadow d-flex flex-column justify-content-center text-center m-5"
+                className="container border border-black shadow d-flex flex-column justify-content-center text-center m-5"
                 style={{
                   position: "absolute",
                   right: "0px",
-                  top: "20%",
-                  height: "50vh",
+                  top: "25%",
+                  height: "58vh",
                   width: "85%",
                 }}
               >
-                <label className="form-label d-flex flex-column mb-5 fw-semibold">
+                <label className="form-label d-flex flex-column py-5 fw-semibold">
                   Duration:
                   <input
                     placeholder="Min"
@@ -402,7 +402,7 @@ export const Create = () => {
 
                 <button
                   type="submit"
-                  className="btn btn-primary fw-semibold mx-5"
+                  className="btn btn-primary fw-semibold mx-5 mb-5"
                 >
                   Add Activity
                 </button>

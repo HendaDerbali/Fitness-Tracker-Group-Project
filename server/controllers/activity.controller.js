@@ -30,6 +30,30 @@ module.exports.CreateNewActivity = async (req, res) => {
     });
 };
 
+module.exports.updateActivity = (req, res) => {
+    const updatedFields = {
+      Duration: req.body.Duration,
+      Distance: req.body.Distance,
+      Intensity: req.body.Intensity,
+      CaloriesBurned: req.body.CaloriesBurned,
+      ActivityChecked: req.body.ActivityChecked,
+      Owner: req.body.Owner,
+    };
+  
+    fitnessSchema.findOneAndUpdate(
+      { _id: req.params.activityId }, // Correct parameter name
+      updatedFields,
+      { new: true, runValidators: true }
+    )
+    .then((updatedActivity) => {
+      if (!updatedActivity) {
+        return res.status(404).json({ error: 'Activity not found' });
+      }
+      res.json({ updatedActivity });
+    })
+    .catch((err) => res.status(400).json(err));
+  };
+
 module.exports.GetAllActivitys = (req, res) => {
  
     fitnessSchema.find()
@@ -43,7 +67,7 @@ module.exports.GetAllActivitys = (req, res) => {
 }
 
 module.exports.FindOneSingleActivity = (req, res) => {
-    fitnessSchema.findOne({ _id: req.params.ActivityId })
+    fitnessSchema.findOne({ _id: req.params.id })
         .then(oneSingleActivity => {
             res.json(oneSingleActivity)
         })

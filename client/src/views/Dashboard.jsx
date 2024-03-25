@@ -7,6 +7,7 @@ import Table from 'react-bootstrap/Table';
 export const Dashboard = () => {
     const [allUsersWithActivities, setAllUsersWithActivities] = useState([]);
     const token = localStorage.getItem('authToken');
+    const loggedInUser = JSON.parse(localStorage.getItem('user'));
 
     // users without activities won't show up, so make sure that all users have at least one activity
     // we can change this if you want and add a conditional rendering so it shows "No activities yet" for users without activities
@@ -39,23 +40,19 @@ export const Dashboard = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {allUsersWithActivities.map((oneUser, index) => (
-                            <tr key={oneUser._id || index}>
-                                <td>{oneUser.firstName} {oneUser.lastName}</td>
-                                <td>
-                                    <ul>
-                                        {oneUser.activities.map((activity, activityIndex) => (
-                                            <li key={activityIndex}>{activity.ActivityChecked}</li>
-                                        ))}
-                                    </ul>
-                                </td>
-                                <td>
-                                    <Link to={`/edit/${oneUser._id}/edit`}><Button variant="secondary">Edit</Button></Link>
-                                    <Button variant="danger" className="mx-3">Delete</Button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
+        {allUsersWithActivities.flatMap(user => 
+            user.activities.map((activity, index) => (
+                <tr key={index}>
+                    <td>{user.firstName} {user.lastName}</td>
+                    <td>{activity.ActivityChecked} with {activity.CaloriesBurned} Kcal burned</td>
+                    <td>
+                        {loggedInUser._id === user._id ? (<><Link to={`/activity/edit/${activity._id}`} className="mx-3"><Button variant="secondary">Edit</Button></Link>
+                        <Button variant="danger" className="me-3">Delete</Button></>) : (<><Link to={`/user/${user._id}`} className='btn btn-primary'>Show</Link></>)}
+                    </td>
+                </tr>
+            ))
+        )}
+    </tbody>
                 </Table>
             </div>
         </div>

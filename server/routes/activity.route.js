@@ -3,8 +3,9 @@ const verifyToken = require("../middelwares/userMiddelware");
 
 module.exports=(app)=>{
     // app.get("/activity" ,verifyToken,Activitycontroller.GetAllActivitys)
-    app.get("/activity/:ActivityId" ,verifyToken ,Activitycontroller.FindOneSingleActivity)
-    app.put("/activity/:ActivityId" ,verifyToken ,Activitycontroller.updateExistingActivity)
+    app.get("/activity/:activityId" ,verifyToken ,Activitycontroller.FindOneSingleActivity)
+    app.put("/activity/:activityId" ,verifyToken ,Activitycontroller.updateExistingActivity)
     app.post("/activity", verifyToken, Activitycontroller.CreateNewActivity)
-    app.delete("/activity/:ActivityId", verifyToken ,Activitycontroller.deleteAnExistingActivity)
+    app.delete("/activity/:activityId", verifyToken ,Activitycontroller.deleteAnExistingActivity)
+    app.patch("/activity/:activityId/update", verifyToken, Activitycontroller.updateActivity)
 }

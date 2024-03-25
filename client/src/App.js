@@ -6,6 +6,8 @@ import Register from './views/Register'
 import Login from './views/Login'
 import {Create} from './views/Create'
 import { Dashboard } from './views/Dashboard';
+import {Edit} from './views/Edit';
+import Show from './views/Show';
 
 
 
@@ -23,6 +25,10 @@ function App() {
 <Route path="/new-activities" element={<Create/>} />
 
 <Route path="/users" element={<Dashboard/>} />
+
+<Route path="/user/:userId" element={<Show/>} />
+
+<Route path="/activity/edit/:activityId" element={<Edit/>} />
 
 
 
