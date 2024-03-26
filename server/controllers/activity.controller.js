@@ -76,15 +76,23 @@ module.exports.FindOneSingleActivity = (req, res) => {
         })
 }
 
-module.exports.deleteAnExistingActivity = (req, res) => {
-    fitnessSchema.deleteOne({ _id: req.params.ActivityId })
-        .then(result => {
-            res.json(result)
-        })
-        .catch((err) => {
-            res.json(err)
-        })
-}
+module.exports.deleteAnExistingActivity = async (req, res) => {
+    try {
+        const activityId = req.params.activityId;
+        const user = await User.findOne({ activities: activityId });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        user.activities = user.activities.filter(activity => activity.toString() !== activityId);
+        await User.updateOne({ _id: user._id }, { activities: user.activities });
+        await fitnessSchema.findByIdAndDelete(activityId);
+        res.json({ message: 'Activity deleted successfully' });
+    } catch (error) {
+        console.error('Delete error:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
 
 module.exports.updateExistingActivity = async (req, res) => {
     try {

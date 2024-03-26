@@ -3,7 +3,7 @@ import Logout from "../components/Logout";
 import { useState, useEffect } from "react";
 import Model from "react-modal";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export const Create = () => {
   // const [bio, setBio] = useState('');
@@ -17,6 +17,7 @@ export const Create = () => {
   const [formErrors, setformErrors] = useState({});
   const [currentUser, setCurrentUser] = useState({});
   const [isHovered, setIsHovered] = useState(false);
+  const Nav = useNavigate();
   const [activityForm, setActivityForm] = useState({
     Duration: 0,
     Intensity: "Minimal",
@@ -103,6 +104,7 @@ export const Create = () => {
         CaloriesBurned: "",
         ActivityChecked: "",
       });
+      Nav("/users");
     } catch (error) {
       console.log(error.response.data.errors);
       setformErrors(error.response.data.errors);

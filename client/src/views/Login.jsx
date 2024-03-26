@@ -48,6 +48,9 @@ const Login = () => {
         } catch (error) {
             console.error(error.response.data.message);
             setFormErrors({ email: error.response.data.message });
+            if (error.response && error.response.status === 400){
+                setFormErrors({ password: 'Incorrect email or password' });
+            }
         }
 
     };
