@@ -40,16 +40,28 @@ const UserSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: 'fitness'
 }],
+    caloriesSum: {
+      type: Number,
+      default: 0
+    },
+    likes: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+  }]
   }, {timestamps: true});
 
 UserSchema.virtual('confirmPassword')
-.get( () => this._confirmPassword )
-.set( value => this._confirmPassword = value );
+  .get(function() {
+    return this._confirmPassword;
+  })
+  .set(function(value) {
+    this._confirmPassword = value;
+  });
 
 UserSchema.pre('validate', function(next) {
-    if (this.password !== this.confirmPassword) {
-      this.invalidate('confirmPassword', 'Password must match confirm password');
-    }
+  if (this.confirmPassword && this.password !== this.confirmPassword) {
+    this.invalidate('confirmPassword', 'Password must match confirm password');
+  }
     next();
   });
 

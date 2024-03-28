@@ -1,6 +1,7 @@
 import React from 'react'
 import Logout from '../components/Logout';
 import { useState, useEffect } from 'react';
+import Table from "react-bootstrap/Table";
 import Model from 'react-modal'
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -69,7 +70,7 @@ export const Home = () => {
   }
 
   return (
-    <div className='p-5'>
+    <div>
       <div className='container-fluid d-flex justify-content-between border border-black bg-white shadow' style={{ height: '100vh', width:"70%" }}>
         <div className='d-flex flex-column mt-5 text-center align-content-center ms-4' style={{ width: '50%' }}>
           <span className='ms-5 border rounded-circle border-black shadow' style={{height:"28vh", width:"15vw"}}>{ profilePic ? (<img className='d-flex justify-content-center border rounded-circle' alt='' src={`http://localhost:8000/public/images/${profilePic}`} style={{height:"100%", width:"100%", object:"fill"}} />) : (<img className='d-flex justify-content-center border rounded-circle' alt='' src={`http://localhost:8000/public/images/circled-user-icon-user-pro-icon-11553397069rpnu1bqqup.png`} style={{height:"100%", width:"100%", objectFit:"cover"}} />)}
@@ -123,6 +124,34 @@ export const Home = () => {
         </div>
         <div className='border m-5 container border-black shadow'>
           <p className='display-6 border-bottom text-center fw-semibold mt-5 pb-5'>My Stats</p>
+          <div>
+            <p className='text-center fw-semibold mt-5 pb-5'>Activities: <span className='fw-bold text-success'>{currentUser.activities.length}</span></p>
+            <p className='text-center fw-semibold mt-5 pb-5'>Streak: <span className='fw-bold text-danger'>{currentUser.caloriesSum.toFixed(3)}</span> Calories Burned</p>
+          </div>
+          <div className='' style={{height: "38%" , overflowY: "auto", overflowX: "hidden"}}>
+            <Table striped bordered hover>
+              <thead>
+                <tr>
+                  <th>Activity</th>
+                  <th fw-semibold>Date</th>
+                  <th fw-semibold>Duration</th>
+                  <th fw-semibold>Distance</th>
+                  <th fw-semibold>Calories Burned</th>
+                </tr>
+              </thead>
+              <tbody>
+                {currentUser.activities && currentUser.activities.length > 0 ? currentUser.activities.map((activity) => (
+                <tr key={activity._id}>
+                  <td>{activity.ActivityChecked}</td>
+                  <td>{activity.createdAt.split("T")[0].split("-").reverse().join("/")}</td>
+                  <td>{activity.Duration} Min</td>
+                  <td>{activity.Distance} m</td>
+                  <td>{activity.CaloriesBurned.toFixed(3)} Kcal</td>
+                </tr>)) : (<tr className='col-4 lead'>No Activities</tr>)}
+              </tbody>
+            </Table>
+          </div>
+          <p className='mt-4 fw-semibold text-center display-6'>Likes: <span className='fw-bold text-primary'>{currentUser.likes}</span></p>
         </div>
       </div>
     </div>

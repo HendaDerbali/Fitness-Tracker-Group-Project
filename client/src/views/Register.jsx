@@ -47,7 +47,10 @@ import { useNavigate } from 'react-router-dom';
             return;
         }
         try {
-            const res = await axios.post('http://localhost:8000/user/register', formData);
+            const capitalizedFirstName = formData.firstName.charAt(0).toUpperCase() + formData.firstName.slice(1);
+            const capitalizedLastName = formData.lastName.charAt(0).toUpperCase() + formData.lastName.slice(1);
+            const data = { ...formData, firstName: capitalizedFirstName, lastName: capitalizedLastName };
+            const res = await axios.post('http://localhost:8000/user/register', data);
             console.log(res.data)
             navigate('/login');
 

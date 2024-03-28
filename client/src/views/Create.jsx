@@ -22,7 +22,10 @@ export const Create = () => {
     Duration: 0,
     Intensity: "Minimal",
     Distance: 0,
-    CaloriesBurned: 0,
+    Weight: 0,
+    Height: 0,
+    Age: 0,
+    Gender: "Male",
     ActivityChecked: "walking",
     Owner: user._id,
   });
@@ -86,7 +89,10 @@ export const Create = () => {
           Duration: activityForm.Duration,
           Distance: activityForm.Distance,
           Intensity: activityForm.Intensity,
-          CaloriesBurned: activityForm.CaloriesBurned,
+          Weight: activityForm.Weight,
+          Height: activityForm.Height,
+          Age: activityForm.Age,
+          Gender: activityForm.Gender,
           ActivityChecked: activityForm.ActivityChecked,
           Owner: currentUser._id,
         },
@@ -101,7 +107,10 @@ export const Create = () => {
         Duration: "",
         Distance: "",
         Intensity: "",
-        CaloriesBurned: "",
+        Weight: "",
+        Height: "",
+        Age: "",
+        Gender: "",
         ActivityChecked: "",
       });
       Nav("/users");
@@ -124,10 +133,10 @@ export const Create = () => {
   }
 
   return (
-    <div className="p-5">
+    <div>
       <div
         className="container-fluid d-flex justify-content-between border border-black bg-white shadow "
-        style={{ height: "100vh", width: "70%" }}
+        style={{ height: "118vh", width: "70%" }}
       >
         <div
           className="d-flex flex-column mt-5 text-center align-content-center ms-4"
@@ -205,7 +214,7 @@ export const Create = () => {
                 x
               </button>
               <label className="fw-bold text-secondary">
-                Upload profile picture{" "}
+                Upload profile picture
               </label>
               <div className="display:flex justify-center flex-col my-2">
                 <form onSubmit={uploadProfilePic} enctype="multipart/form-data">
@@ -243,12 +252,12 @@ export const Create = () => {
 
         <div
           className="d-flex flex-row justify-content-between container border border-black m-5 shadow"
-          style={{ position: "relative", right: "0px", height: "90vh" }}
+          style={{ position: "relative", right: "0px", height: "110vh" }}
         >
           <p className="fw-semibold m-5">Track an Activity:</p>
           <div className="d-flex flex-column m-5" style={{ width: "18%" }}>
             <form onSubmit={handleCreateActivity}>
-              <div className="d-flex flew-row justify-content-between gap-2 form-control px-2 mb-1">
+              <div className="bg-success d-flex flew-row justify-content-between gap-2 form-control px-2 mb-1">
                 <input
                   type="radio"
                   onChange={(e) =>
@@ -264,7 +273,7 @@ export const Create = () => {
                 />
                 <label>Walking</label>
               </div>
-              <div className="d-flex flew-row justify-content-between gap-2 form-control px-2 mb-1">
+              <div className="bg-danger d-flex flew-row justify-content-between gap-2 form-control px-2 mb-1">
                 <input
                   type="radio"
                   onChange={(e) =>
@@ -279,7 +288,7 @@ export const Create = () => {
                 />
                 <label>Running</label>
               </div>
-              <div className="d-flex flew-row justify-content-between gap-2 form-control px-2 mb-1">
+              <div className="bg-warning d-flex flew-row justify-content-between gap-2 form-control px-2 mb-1">
                 <input
                   type="radio"
                   onChange={(e) =>
@@ -294,7 +303,7 @@ export const Create = () => {
                 />
                 <label>Cycling</label>
               </div>
-              <div className="d-flex flew-row justify-content-between gap-2 form-control px-2 mb-1">
+              <div className="bg-info d-flex flew-row justify-content-between gap-2 form-control px-2 mb-1">
                 <input
                   type="radio"
                   onChange={(e) =>
@@ -315,13 +324,13 @@ export const Create = () => {
                 style={{
                   position: "absolute",
                   right: "0px",
-                  top: "25%",
-                  height: "58vh",
+                  top: "16%",
+                  height: "80vh",
                   width: "85%",
                 }}
               >
                 <label className="form-label d-flex flex-column py-5 fw-semibold">
-                  Duration:
+                  Duration: Min
                   <input
                     placeholder="Min"
                     type="number"
@@ -342,9 +351,9 @@ export const Create = () => {
                 </label>
 
                 <label className="form-label d-flex flex-column mb-5 fw-semibold">
-                  Distance:
+                  Distance: m
                   <input
-                    placeholder="M"
+                    placeholder="m"
                     type="number"
                     name="Distance"
                     value={activityForm.Distance}
@@ -363,7 +372,7 @@ export const Create = () => {
                 </label>
 
                 <label className="form-label d-flex flex-column mb-5 fw-semibold">
-                  Intensity:
+                  Intensity: Level
                   <select
                     name="Intensity"
                     id="Intensity"
@@ -382,25 +391,108 @@ export const Create = () => {
                 </label>
 
                 <label className="form-label d-flex flex-column mb-5 fw-semibold">
-                  Calories Burned:
+                  Weight: Kg
                   <input
-                    placeholder="Kcal"
+                    placeholder="Kg"
                     type="number"
-                    name="CaloriesBurned"
-                    value={activityForm.CaloriesBurned}
+                    name="Weight"
+                    value={activityForm.Weight}
                     onChange={(e) =>
                       setActivityForm({
                         ...activityForm,
-                        CaloriesBurned: e.target.value,
+                        Weight: e.target.value,
                       })
                     }
                   />
-                  {formErrors.CaloriesBurned && (
+                  {formErrors.Weight && (
                     <p className="text-danger position-absolute mt-5 pt-2">
-                      {formErrors.CaloriesBurned.message}
+                      {formErrors.Weight.message}
                     </p>
                   )}
                 </label>
+
+                <label className="form-label d-flex flex-column mb-5 fw-semibold">
+                  Height: Cm
+                  <input
+                    placeholder="Cm"
+                    type="number"
+                    name="Height"
+                    value={activityForm.Height}
+                    onChange={(e) =>
+                      setActivityForm({
+                        ...activityForm,
+                        Height: e.target.value,
+                      })
+                    }
+                  />
+                  {formErrors.Height && (
+                    <p className="text-danger position-absolute mt-5 pt-2">
+                      {formErrors.Height.message}
+                    </p>
+                  )}
+                </label>
+
+                <label className="form-label d-flex flex-column mb-5 fw-semibold">
+                  Age:
+                  <input
+                    placeholder="Yrs"
+                    type="number"
+                    name="Age"
+                    value={activityForm.Age}
+                    onChange={(e) =>
+                      setActivityForm({
+                        ...activityForm,
+                        Age: e.target.value,
+                      })
+                    }
+                  />
+                  {formErrors.Age && (
+                    <p className="text-danger position-absolute mt-5 pt-2">
+                      {formErrors.Age.message}
+                    </p>
+                  )}
+                </label>
+
+                <div className="d-flex justify-content-center gap-5 mb-3">
+                  <label className="block mb-2 fw-medium">
+                    Gender:
+                  </label>
+                  <div className="d-flex gap-5">
+                    <input
+                      defaultChecked
+                      className="mb-2"
+                      type="radio"
+                      id="Male"
+                      name="Gender"
+                      value="Male"
+                      onChange={(e) =>
+                        setActivityForm({
+                          ...activityForm,
+                          Gender: e.target.value,
+                        })
+                      }
+                    />
+                    <label className="me-1 fw-medium text-secondary">
+                      Male
+                    </label>
+                    <input
+                      className="mb-2"
+                      type="radio"
+                      id="Female"
+                      name="Gender"
+                      value="Female"
+                      onChange={(e) =>
+                        setActivityForm({
+                          ...activityForm,
+                          Gender: e.target.value,
+                        })
+                      }
+                    />
+                    <label className="me-1 fw-medium font-medium text-secondary">
+                      Female
+                    </label>
+                  </div>
+                </div>
 
                 <button
                   type="submit"

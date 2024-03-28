@@ -1,5 +1,6 @@
-const fitnessSchema = require("../models/activity.model");
-const verifyToken = require("../middelwares/userMiddelware");
+const { fitnessSchema } = require("../models/activity.model");
+const { calculateWalkingCalories, calculateRunningCalories, calculateCyclingCalories, calculateSwimmingCalories } = require("../models/activity.model");
+const verifyToken = require("../config/jwt.config");
 const User = require("../models/user.model");
 
 
@@ -8,19 +9,21 @@ module.exports.CreateNewActivity = async (req, res) => {
     verifyToken(req, res, async () => {
         try {
             const user = req.user;
-            const addedByUser = await User.findById(user.id);
             const newActivity = new fitnessSchema({
                 Duration: req.body.Duration,
                 Distance: req.body.Distance,
                 Intensity: req.body.Intensity,
-                CaloriesBurned: req.body.CaloriesBurned,
+                Weight: req.body.Weight,
+                Height: req.body.Height,
+                Age: req.body.Age,
+                Gender: req.body.Gender,
                 ActivityChecked: req.body.ActivityChecked,
                 Owner: user.id
             });
+
             const savedActivity = await newActivity.save();
-            if (addedByUser) {
-                await User.findByIdAndUpdate(user.id, { $push: { activities: savedActivity._id } });
-            }
+            await User.findByIdAndUpdate(user.id, { $push: { activities: savedActivity._id } });
+            await User.findByIdAndUpdate(user.id, { $inc: { caloriesSum: savedActivity.CaloriesBurned } });
 
             console.log(savedActivity);
             res.json({ newActivity: savedActivity });
@@ -30,31 +33,56 @@ module.exports.CreateNewActivity = async (req, res) => {
     });
 };
 
-module.exports.updateActivity = (req, res) => {
-    const updatedFields = {
-      Duration: req.body.Duration,
-      Distance: req.body.Distance,
-      Intensity: req.body.Intensity,
-      CaloriesBurned: req.body.CaloriesBurned,
-      ActivityChecked: req.body.ActivityChecked,
-      Owner: req.body.Owner,
-    };
-  
-    fitnessSchema.findOneAndUpdate(
-      { _id: req.params.activityId }, // Correct parameter name
-      updatedFields,
-      { new: true, runValidators: true }
-    )
-    .then((updatedActivity) => {
-      if (!updatedActivity) {
-        return res.status(404).json({ error: 'Activity not found' });
-      }
-      res.json({ updatedActivity });
-    })
-    .catch((err) => res.status(400).json(err));
-  };
+module.exports.updateActivity = async (req, res) => {
+    verifyToken(req, res, async () => {
+        try {
+            const activityId = req.params.activityId;
+            const updatedFields = req.body;
+            const existingActivity = await fitnessSchema.findById(activityId);
+            if (!existingActivity) {
+                return res.status(404).json({ message: 'Activity not found' });
+            }
+            const oldCaloriesBurned = existingActivity.CaloriesBurned;
+            let newCaloriesBurned = oldCaloriesBurned;
+            if (updatedFields.Duration || updatedFields.Distance || updatedFields.Intensity || updatedFields.Weight || updatedFields.Height || updatedFields.Age || updatedFields.Gender || updatedFields.ActivityChecked) {
+                const { Duration, Distance, Intensity, Weight, Height, Age, Gender, ActivityChecked } = { ...existingActivity._doc, ...updatedFields };
+                
+                switch (ActivityChecked) {
+                    case 'walking':
+                        newCaloriesBurned = calculateWalkingCalories(Duration, Intensity, Distance, Weight, Height, Gender, Age);
+                        break;
+                    case 'running':
+                        newCaloriesBurned = calculateRunningCalories(Duration, Intensity, Distance, Weight, Height, Gender, Age);
+                        break;
+                    case 'cycling':
+                        newCaloriesBurned = calculateCyclingCalories(Duration, Intensity, Distance, Weight, Height, Gender, Age);
+                        break;
+                    case 'swimming':
+                        newCaloriesBurned = calculateSwimmingCalories(Duration, Intensity, Distance, Weight, Height, Gender, Age);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            const updatedActivity = await fitnessSchema.findByIdAndUpdate(activityId, { ...updatedFields, CaloriesBurned: newCaloriesBurned }, { new: true });
+            if (!updatedActivity) {
+                return res.status(404).json({ message: 'Activity not found' });
+            }
+            const user = await User.findByIdAndUpdate(updatedActivity.Owner);
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+            const caloriesDiff = newCaloriesBurned - oldCaloriesBurned;
+            user.caloriesSum += caloriesDiff;
+            await user.save();
+            res.json({ updatedActivity, user });
+        } catch(err) {
+            res.status(400).json(err);
+        }
+    });
+};
 
-module.exports.GetAllActivitys = (req, res) => {
+module.exports.GetAllActivities = (req, res) => {
  
     fitnessSchema.find()
     .then((allfitness)=>{
@@ -66,8 +94,8 @@ module.exports.GetAllActivitys = (req, res) => {
     })
 }
 
-module.exports.FindOneSingleActivity = (req, res) => {
-    fitnessSchema.findOne({ _id: req.params.id })
+module.exports.FindOneActivity = (req, res) => {
+    fitnessSchema.findOne({ _id: req.params.activityId })
         .then(oneSingleActivity => {
             res.json(oneSingleActivity)
         })
@@ -76,39 +104,37 @@ module.exports.FindOneSingleActivity = (req, res) => {
         })
 }
 
-module.exports.deleteAnExistingActivity = async (req, res) => {
-    try {
-        const activityId = req.params.activityId;
-        const user = await User.findOne({ activities: activityId });
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+module.exports.deleteActivity = async (req, res) => {
+    verifyToken(req, res, async () => {
+        try {
+            User.schema.set('validateBeforeSave', false);
+
+            const activityId = req.params.activityId;
+            const deletedActivity = await fitnessSchema.findById(activityId);
+            if (!deletedActivity) {
+                return res.status(404).json({ message: 'Activity not found' });
+            }
+            const user = await User.findById(deletedActivity.Owner);
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+            let caloriesDiff = -deletedActivity.CaloriesBurned;
+            user.caloriesSum += caloriesDiff;
+            if (user.caloriesSum < 0) {
+                user.caloriesSum = 0;
+            }
+            await user.save();
+            await User.findByIdAndUpdate(user._id, { $pull: { activities: activityId } });
+            await fitnessSchema.findByIdAndDelete(activityId);
+
+            User.schema.set('validateBeforeSave', true);
+
+            res.json({ message: 'Activity deleted successfully' });
+        } catch (error) {
+            console.error('Delete error:', error);
+            res.status(500).json({ message: 'Internal Server Error' });
         }
-
-        user.activities = user.activities.filter(activity => activity.toString() !== activityId);
-        await User.updateOne({ _id: user._id }, { activities: user.activities });
-        await fitnessSchema.findByIdAndDelete(activityId);
-        res.json({ message: 'Activity deleted successfully' });
-    } catch (error) {
-        console.error('Delete error:', error);
-        res.status(500).json({ message: 'Internal Server Error' });
-    }
+    });
 };
-
-module.exports.updateExistingActivity = async (req, res) => {
-    try {
-        const updatedActivity = await fitnessSchema.findOneAndUpdate(
-            { _id: req.params.ActivityId },
-            req.body,
-            { new: true, runValidators: true }
-        );
-
-        res.json({ done: true, updatedActivity });
-    } catch (error) {
-        console.error('Update error:', error);
-        res.status(500).json({ message: 'Internal Server Error' });
-    }
-};
-
-
 
     

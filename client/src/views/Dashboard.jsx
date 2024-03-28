@@ -48,6 +48,7 @@ export const Dashboard = () => {
       }}
     >
       <div style={{ height: "100vh", width: "70%" }}>
+      <><Link className="btn btn-info" to={`/home`} style={{position:"absolute", top:"5%", right:"5%"}}>Back to profile</Link></>
         <h1>Check other user's streaks!</h1>
         <br />
         <Table striped bordered hover>
@@ -59,14 +60,14 @@ export const Dashboard = () => {
             </tr>
           </thead>
           <tbody>
-            {allUsersWithActivities.flatMap((user) =>
+            {allUsersWithActivities && allUsersWithActivities.length > 0 ? allUsersWithActivities.flatMap((user) =>
               user.activities.map((activity) => (
                 <tr key={activity._id}>
                   <td>
                     {user.firstName} {user.lastName}
                   </td>
                   <td>
-                    {activity.ActivityChecked} with {activity.CaloriesBurned}{" "}
+                    {activity.ActivityChecked} with {activity.CaloriesBurned.toFixed(3)}{" "}
                     Kcal burned
                   </td>
                   <td>
@@ -96,7 +97,7 @@ export const Dashboard = () => {
                   </td>
                 </tr>
               ))
-            )}
+            ) : (<p className="col-4 lead">No users activities yet</p>)}
           </tbody>
         </Table>
       </div>

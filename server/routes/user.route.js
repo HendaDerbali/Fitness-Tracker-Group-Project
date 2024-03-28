@@ -1,5 +1,5 @@
 const userController = require("../controllers/user.controller");
-const verifyToken = require("../middelwares/userMiddelware");
+const verifyToken = require("../config/jwt.config");
 
 module.exports=(app)=>{
     app.post('/user/register',userController.register);
@@ -7,5 +7,7 @@ module.exports=(app)=>{
     app.post ('/user/logout',userController.logout);
     app.patch('/user/profile/:id/image', verifyToken, userController.uploadProfilePicture)
     app.get('/user/:id', verifyToken ,userController.getuser)
+    app.patch('/user/:id/:userId/add', verifyToken, userController.addLike)
+    app.patch('/user/:id/:userId/remove', verifyToken, userController.removeLike)
     app.get("/users/activities", verifyToken,userController.getAllUsers);
 }

@@ -1,6 +1,7 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import Table from "react-bootstrap/Table";
 import Logout from '../components/Logout';
 import axios from 'axios';
 
@@ -9,11 +10,7 @@ function Show() {
     const [profilePic, setProfilePic] = useState(null);
     const [loading, setLoading] = useState(true);
     const token = localStorage.getItem('authToken')
-    const [visible, setVisible] = useState(false)
-    const [errors, setErrors] = useState({})
     const [currentUser, setCurrentUser] = useState({})
-    const [isHovered, setIsHovered] = useState(false);
-    const reload = () => window.location.reload();
     const { userId } = useParams()
           
           useEffect (() => {
@@ -52,7 +49,38 @@ function Show() {
           </div>
         </div>
         <div className='border m-5 container border-black shadow'>
-          <p className='display-6 border-bottom text-center fw-semibold mt-5 pb-5'>My Stats</p>
+          <p className='display-6 border-bottom text-center fw-semibold mt-5 pb-5'>User Stats</p>
+          <div>
+            <p className='text-center fw-semibold mt-5 pb-5'>Activities: <span className='fw-bold text-success'>{currentUser?.activities?.length}</span></p>
+            <p className='text-center fw-semibold mt-5 pb-5'>Streak: <span className='fw-bold text-danger'>{currentUser?.caloriesSum?.toFixed(3)}</span> Calories Burned</p>
+          </div>
+          <div className='' style={{height: "38%" , overflowY: "auto", overflowX: "hidden"}}>
+            <Table striped bordered hover>
+              <thead>
+                <tr>
+                  <th>Activity</th>
+                  <th fw-semibold>Date</th>
+                  <th fw-semibold>Duration</th>
+                  <th fw-semibold>Distance</th>
+                  <th fw-semibold>Calories Burned</th>
+                </tr>
+              </thead>
+              <tbody>
+                {currentUser.activities && currentUser.activities.length > 0 ? currentUser.activities.map((activity) => (
+                <tr key={activity._id}>
+                  <td>{activity.ActivityChecked}</td>
+                  <td>{activity.createdAt.split("T")[0].split("-").reverse().join("/")}</td>
+                  <td>{activity.Duration} Min</td>
+                  <td>{activity.Distance} m</td>
+                  <td>{activity.CaloriesBurned.toFixed(3)} Kcal</td>
+                </tr>)) : (<tr className='col-4 lead'>No Activities</tr>)}
+              </tbody>
+            </Table>
+          </div>
+          <>
+            {currentUser ? (<button className="bg-transparent border-0" style={{scale: "0.1", position: "absolute", top: "50%", right: "30%"}}><img className='' src="http://localhost:8000/public/reactions/like.png"/>{currentUser.likes}</button>)
+            : (<button className="bg-transparent border-0" style={{scale: "0.1", position: "absolute", top: "50%", right: "30%"}}><img className='' src="http://localhost:8000/public/reactions/dislike.png"/>0</button>)}
+          </>
         </div>
       </div>
     </div>

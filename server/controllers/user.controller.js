@@ -1,6 +1,6 @@
 const User = require("../models/user.model");
 const fitnessSchema = require("../models/activity.model");
-
+const verifyToken = require("../config/jwt.config");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const key = process.env.KEY
@@ -54,7 +54,6 @@ module.exports = {
         if (existingUser) {
           return res.status(400).json({ message: 'Email already exists' });
         }
-
         User.create(req.body)
           .then(user => {
             res.json({ msg: "success!", user: user });
@@ -98,9 +97,66 @@ module.exports = {
     });
   },
 
+  addLike: async (req, res) => {
+    const currentUserId = req.params.id;
+    const userId = req.params.userId;
+  
+    try {
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).json({ message: "User not found." });
+      }
+      if (!user.likes) {
+        user.likes = [];
+      }
+      if (!user.likes.includes(currentUserId)) {
+
+        user.likes.push(currentUserId);
+      } else {
+        return res.status(400).json({ message: "User already liked this profile." });
+      }
+
+      await User.updateOne({ _id: user._id }, { likes: user.likes });
+      res.json({
+        message: "Profile liked successfully.",
+        user: user,
+      });
+    } catch (err) {
+      console.error("Error adding a like:", err);
+      res.status(500).json({ message: "An error occurred while adding a like to the user profile." });
+    }
+  },
+  
+  removeLike: async (req, res) => {
+    const currentUserId = req.params.id;
+    const userId = req.params.userId;
+  
+    try {
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).json({ message: "User not found." });
+      }
+      const index = user.likes.indexOf(currentUserId);
+      if (index === -1) {
+        return res.status(400).json({ message: "User has not liked this profile." });
+      }
+      user.likes.splice(index, 1);
+
+      await User.updateOne({ _id: user._id }, { likes: user.likes });
+      res.json({
+        message: "Like removed from user profile successfully.",
+        user: user,
+      });
+    } catch (err) {
+      console.error("Error removing like:", err);
+      res.status(500).json({ message: "Internal server error." });
+    }
+  },
+
   getuser: (req, res) => {
     const userId = req.params.id;
     User.findOne({ _id: userId })
+      .populate('activities')
       .then((user) => {
         if (!user) {
           return res.status(404).json({ message: "User not found" });
@@ -109,7 +165,6 @@ module.exports = {
       })
       .catch((err) => res.status(400).json(err));
   },
-
 
   //? Read All
 
