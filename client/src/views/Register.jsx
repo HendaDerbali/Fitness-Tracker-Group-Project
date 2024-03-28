@@ -36,6 +36,10 @@ import { useNavigate } from 'react-router-dom';
             errors.confirmPassword = 'Passwords do not match';
         }
 
+        if (!formData.confirmPassword) {
+            errors.confirmPassword = 'Please confirm your password';
+        }
+
         setFormErrors(errors);
         return Object.keys(errors).length === 0;
     };
@@ -49,7 +53,7 @@ import { useNavigate } from 'react-router-dom';
         try {
             const capitalizedFirstName = formData.firstName.charAt(0).toUpperCase() + formData.firstName.slice(1);
             const capitalizedLastName = formData.lastName.charAt(0).toUpperCase() + formData.lastName.slice(1);
-            const data = { ...formData, firstName: capitalizedFirstName, lastName: capitalizedLastName };
+            const data = { ...formData, firstName: capitalizedFirstName, lastName: capitalizedLastName, confirmPassword: formData.confirmPassword };
             const res = await axios.post('http://localhost:8000/user/register', data);
             console.log(res.data)
             navigate('/login');

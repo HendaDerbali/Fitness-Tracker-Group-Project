@@ -91,18 +91,18 @@ export const Edit = () => {
           console.log("Activity data:", res.data);
           const activityData = res.data;
           setActivityForm({
-          ...activityForm,
-          Duration: activityData.Duration,
-          Distance: activityData.Distance,
-          Intensity: activityData.Intensity,
-          Weight: activityData.Weight,
-          Height: activityData.Height,
-          Age: activityData.Age,
-          Gender: activityData.Gender,
-          ActivityChecked: activityData.ActivityChecked,
-          Owner: currentUser._id,
-        });
-      })
+            ...activityForm,
+            Duration: activityData.Duration,
+            Distance: activityData.Distance,
+            Intensity: activityData.Intensity,
+            Weight: activityData.Weight,
+            Height: activityData.Height,
+            Age: activityData.Age,
+            Gender: activityData.Gender,
+            ActivityChecked: activityData.ActivityChecked,
+            Owner: currentUser._id,
+          });
+        })
         .catch((error) => {
           console.log(error);
         });
@@ -146,8 +146,8 @@ export const Edit = () => {
       Nav(`/users`);
       console.log(res);
     } catch (error) {
-      console.log(error.response.data.errors);
-      setformErrors(error.response.data.errors);
+      console.log(error.response.data);
+      setformErrors(error.response.data);
     }
   };
 
@@ -374,11 +374,18 @@ export const Edit = () => {
                       })
                     }
                   />
-                  {formErrors.Duration && (
-                    <p className="text-danger position-absolute mt-5 pt-2">
-                      {formErrors.Duration.message}
-                    </p>
-                  )}
+                  {formErrors.errors &&
+                    formErrors.errors.some(
+                      (error) => error.field === "Duration"
+                    ) && (
+                      <p className="text-danger position-absolute mt-5 pt-2">
+                        {
+                          formErrors.errors.find(
+                            (error) => error.field === "Duration"
+                          ).message
+                        }
+                      </p>
+                    )}
                 </label>
                 <label className="form-label d-flex flex-column mb-5 fw-semibold">
                   Distance: m
@@ -394,11 +401,18 @@ export const Edit = () => {
                       })
                     }
                   />
-                  {formErrors.Distance && (
-                    <p className="text-danger position-absolute mt-5 pt-2">
-                      {formErrors.Distance.message}
-                    </p>
-                  )}
+                  {formErrors.errors &&
+                    formErrors.errors.some(
+                      (error) => error.field === "Distance"
+                    ) && (
+                      <p className="text-danger position-absolute mt-5 pt-2">
+                        {
+                          formErrors.errors.find(
+                            (error) => error.field === "Distance"
+                          ).message
+                        }
+                      </p>
+                    )}
                 </label>
                 <label className="form-label d-flex flex-column mb-5 fw-semibold">
                   Intensity: Level
@@ -432,11 +446,18 @@ export const Edit = () => {
                       })
                     }
                   />
-                  {formErrors.Weight && (
-                    <p className="text-danger position-absolute mt-5 pt-2">
-                      {formErrors.Weight.message}
-                    </p>
-                  )}
+                  {formErrors.errors &&
+                    formErrors.errors.some(
+                      (error) => error.field === "Weight"
+                    ) && (
+                      <p className="text-danger position-absolute mt-5 pt-2">
+                        {
+                          formErrors.errors.find(
+                            (error) => error.field === "Weight"
+                          ).message
+                        }
+                      </p>
+                    )}
                 </label>
                 <label className="form-label d-flex flex-column mb-5 fw-semibold">
                   Height: Cm
@@ -452,11 +473,18 @@ export const Edit = () => {
                       })
                     }
                   />
-                  {formErrors.Height && (
-                    <p className="text-danger position-absolute mt-5 pt-2">
-                      {formErrors.Height.message}
-                    </p>
-                  )}
+                  {formErrors.errors &&
+                    formErrors.errors.some(
+                      (error) => error.field === "Height"
+                    ) && (
+                      <p className="text-danger position-absolute mt-5 pt-2">
+                        {
+                          formErrors.errors.find(
+                            (error) => error.field === "Height"
+                          ).message
+                        }
+                      </p>
+                    )}
                 </label>
                 <label className="form-label d-flex flex-column mb-5 fw-semibold">
                   Age:
@@ -472,16 +500,21 @@ export const Edit = () => {
                       })
                     }
                   />
-                  {formErrors.Age && (
-                    <p className="text-danger position-absolute mt-5 pt-2">
-                      {formErrors.Age.message}
-                    </p>
-                  )}
+                  {formErrors.errors &&
+                    formErrors.errors.some(
+                      (error) => error.field === "Age"
+                    ) && (
+                      <p className="text-danger position-absolute mt-5 pt-2">
+                        {
+                          formErrors.errors.find(
+                            (error) => error.field === "Age"
+                          ).message
+                        }
+                      </p>
+                    )}
                 </label>
                 <div className="d-flex gap-5 justify-content-center mb-3">
-                  <label className="block mb-2 fw-medium">
-                    Gender:
-                  </label>
+                  <label className="block mb-2 fw-medium">Gender:</label>
                   <div className="d-flex gap-5">
                     <input
                       defaultChecked

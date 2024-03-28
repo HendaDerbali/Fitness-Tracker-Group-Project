@@ -44,6 +44,7 @@ module.exports.updateActivity = async (req, res) => {
             }
             const oldCaloriesBurned = existingActivity.CaloriesBurned;
             let newCaloriesBurned = oldCaloriesBurned;
+
             if (updatedFields.Duration || updatedFields.Distance || updatedFields.Intensity || updatedFields.Weight || updatedFields.Height || updatedFields.Age || updatedFields.Gender || updatedFields.ActivityChecked) {
                 const { Duration, Distance, Intensity, Weight, Height, Age, Gender, ActivityChecked } = { ...existingActivity._doc, ...updatedFields };
                 
@@ -64,10 +65,16 @@ module.exports.updateActivity = async (req, res) => {
                         break;
                 }
             }
-            const updatedActivity = await fitnessSchema.findByIdAndUpdate(activityId, { ...updatedFields, CaloriesBurned: newCaloriesBurned }, { new: true });
-            if (!updatedActivity) {
-                return res.status(404).json({ message: 'Activity not found' });
+            existingActivity.set({ ...updatedFields, CaloriesBurned: newCaloriesBurned });
+            const validationResult = existingActivity.validateSync();
+            if (validationResult) {
+                const errors = Object.keys(validationResult.errors).map(key => ({
+                    field: key,
+                    message: validationResult.errors[key].message
+                }));
+                return res.status(400).json({ errors });
             }
+            const updatedActivity = await existingActivity.save();
             const user = await User.findByIdAndUpdate(updatedActivity.Owner);
             if (!user) {
                 return res.status(404).json({ message: 'User not found' });
@@ -77,7 +84,7 @@ module.exports.updateActivity = async (req, res) => {
             await user.save();
             res.json({ updatedActivity, user });
         } catch(err) {
-            res.status(400).json(err);
+            res.status(400).json({ message: err.message });
         }
     });
 };

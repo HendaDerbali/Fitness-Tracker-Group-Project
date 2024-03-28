@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
 import RemoveActivity from "../components/RemoveActivity";
+import Logout from "../components/Logout";
 
 export const Dashboard = () => {
   const [allUsersWithActivities, setAllUsersWithActivities] = useState([]);
@@ -47,8 +48,8 @@ export const Dashboard = () => {
         alignItems: "center",
       }}
     >
-      <div style={{ height: "100vh", width: "70%" }}>
-      <><Link className="btn btn-info" to={`/home`} style={{position:"absolute", top:"5%", right:"5%"}}>Back to profile</Link></>
+      <div className="mt-5" style={{ height: "100%", width: "70%" }}>
+      <div className="d-flex flex-col gap-3" style={{position:"absolute", top:"2%", right:"2%"}}><Link className="btn btn-info mt-5" to={`/home`}>Back to profile</Link><Logout /></div>
         <h1>Check other user's streaks!</h1>
         <br />
         <Table striped bordered hover>
@@ -77,7 +78,7 @@ export const Dashboard = () => {
                           to={`/activity/edit/${activity._id}`}
                           className="mx-3"
                         >
-                          <Button variant="secondary">Edit</Button>
+                          <Button variant="success">Edit</Button>
                         </Link>
                         <RemoveActivity
                           activityId={activity._id}

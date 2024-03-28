@@ -32,36 +32,49 @@ const upload = multer({ storage: storage, fileFilter: imageFilter }).single("fil
 
 module.exports = {
   login: async (req, res) => {
-    const user = await User.findOne({ email: req.body.email });
-    if (user === null) {
-      return res.sendStatus(400);
+    try {
+      const user = await User.findOne({ email: req.body.email });
+      if (!user) {
+        return res.status(400).json({ error: { email: "User not found." } });
+      }
+      const correctPassword = await bcrypt.compare(req.body.password, user.password);
+      if (!correctPassword) {
+        return res.status(400).json({ error: { password: "Wrong password." } });
+      }
+  
+      const userToken = jwt.sign({
+        id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName
+      }, key, { expiresIn: "1d" });
+      res.json({ msg: "success!", user: user, token: userToken });
+    } catch (error) {
+      console.error("Login error:", error);
+      if (error.name === "TokenExpiredError") {
+        return res.status(401).json({ error: { token: "Token expired. Please log in again." } });
+      } else {
+        return res.status(500).json({ error: { server: "Internal server error." } });
+      }
     }
-    const correctPassword = await bcrypt.compare(req.body.password, user.password);
-    if (!correctPassword) {
-      return res.sendStatus(400);
-    }
-
-    const userToken = jwt.sign({
-      id: user._id,
-      firstName: user.firstName,
-      lastName: user.lastName
-    }, key, { expiresIn: "1d" });
-    res.json({ msg: "success!", user: user, token: userToken });
   },
-  register: (req, res) => {
-    User.findOne({ email: req.body.email })
-      .then(existingUser => {
+  register: async (req, res) => {
+    try {
+        await User.validate(req.body);
+        const existingUser = await User.findOne({ email: req.body.email });
         if (existingUser) {
-          return res.status(400).json({ message: 'Email already exists' });
+            return res.status(400).json({ message: 'Email already exists' });
         }
-        User.create(req.body)
-          .then(user => {
-            res.json({ msg: "success!", user: user });
-          })
-          .catch(err => res.json(err));
-      })
-      .catch(err => res.json(err));
-  },
+        if (req.body.password !== req.body.confirmPassword) {
+          return res.status(400).json({ message: 'Password must match confirm password' });
+        }
+        
+        const user = await User.create(req.body);
+        res.json({ msg: "success!", user: user });
+    } catch (err) {
+        console.error(err);
+        res.status(400).json(err);
+    }
+},
 
   logout: (req, res) => {
     res.clearCookie("authToken");

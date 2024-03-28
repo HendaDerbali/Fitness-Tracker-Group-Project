@@ -126,7 +126,7 @@ export const Home = () => {
           <p className='display-6 border-bottom text-center fw-semibold mt-5 pb-5'>My Stats</p>
           <div>
             <p className='text-center fw-semibold mt-5 pb-5'>Activities: <span className='fw-bold text-success'>{currentUser.activities.length}</span></p>
-            <p className='text-center fw-semibold mt-5 pb-5'>Streak: <span className='fw-bold text-danger'>{currentUser.caloriesSum.toFixed(3)}</span> Calories Burned</p>
+            <p className='text-center fw-semibold mt-5 pb-5'>Streak: <span className='fw-bold text-danger'>{currentUser.caloriesSum.toFixed(0)}</span> Kilocalories Burned</p>
           </div>
           <div className='' style={{height: "38%" , overflowY: "auto", overflowX: "hidden"}}>
             <Table striped bordered hover>

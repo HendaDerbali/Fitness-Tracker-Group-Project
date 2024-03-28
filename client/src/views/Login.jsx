@@ -37,13 +37,14 @@ const Login = () => {
             const response = await axios.post('http://localhost:8000/user/login', formData);
             const token = response.data.token;
             const { firstName, lastName, _id } = response.data.user
+            console.log(token, firstName, lastName, _id)
 
             localStorage.setItem('authToken', token);
             localStorage.setItem('user', JSON.stringify({ firstName, lastName, _id }));
             navigate('/home')
 
         } catch (error) {
-            console.error(error.response.data.message);
+            console.error(error.response);
             setFormErrors({ email: error.response.data.message });
             if (error.response && error.response.status === 400){
                 setFormErrors({ password: 'Incorrect email or password' });
