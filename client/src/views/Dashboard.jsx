@@ -39,6 +39,14 @@ export const Dashboard = () => {
     setAllUsersWithActivities(updatedUsersWithActivities);
   };
 
+  if (!token) {
+    return (
+      <h1 className="text-center pt-5 display-0">
+        Please login to view this page.
+      </h1>
+    ); // or Nav
+  }
+
   return (
     <div
       className="p-5 text-center"

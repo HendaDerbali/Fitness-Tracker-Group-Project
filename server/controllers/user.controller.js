@@ -42,12 +42,12 @@ module.exports = {
         return res.status(400).json({ error: { password: "Wrong password." } });
       }
   
-      const userToken = jwt.sign({
+      const authToken = jwt.sign({
         id: user._id,
         firstName: user.firstName,
         lastName: user.lastName
       }, key, { expiresIn: "1d" });
-      res.json({ msg: "success!", user: user, token: userToken });
+      res.json({ msg: "success!", user: user, token: authToken });
     } catch (error) {
       console.error("Login error:", error);
       if (error.name === "TokenExpiredError") {

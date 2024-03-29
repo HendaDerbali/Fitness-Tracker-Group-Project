@@ -74,6 +74,14 @@ function Show() {
             }
           },[loading, userId, token]);
 
+          if (!token) {
+            return (
+              <h1 className="text-center pt-5 display-0">
+                Please login to view this page.
+              </h1>
+            ); // or Nav
+          }
+
 
   return (
     <div>
