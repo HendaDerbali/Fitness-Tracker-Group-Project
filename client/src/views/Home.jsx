@@ -115,7 +115,7 @@ export const Home = () => {
           </Model>
             </span>
           <p className='mt-5 pb-1 display-6 fw-semibold border-bottom'>{currentUser.firstName} {currentUser.lastName}</p>
-          <p className='fw-semibold'>"This is my bio"</p>
+          
           <div className='mt-5'>
           <Link to="/new-activities">Add a Goal</Link> <br/>
           <Link to="/users">All Users</Link>
@@ -146,12 +146,14 @@ export const Home = () => {
                   <td>{activity.createdAt.split("T")[0].split("-").reverse().join("/")}</td>
                   <td>{activity.Duration} Min</td>
                   <td>{activity.Distance} m</td>
-                  <td>{activity.CaloriesBurned.toFixed(3)} Kcal</td>
+                  <td>{activity.CaloriesBurned.toFixed(3)} Cal</td>
                 </tr>)) : (<tr className='col-4 lead'>No Activities</tr>)}
               </tbody>
             </Table>
           </div>
-          <p className='mt-4 fw-semibold text-center display-6'>Likes: <span className='fw-bold text-primary'>{currentUser.likes}</span></p>
+          <div className='d-flex flex-col gap-2 justify-content-center'>
+          <p className='mt-4 fw-semibold display-6'>Likes:</p><span className='fw-bold text-primary display-6 mt-4'>{currentUser.likes.length}</span>
+          </div>
         </div>
       </div>
     </div>

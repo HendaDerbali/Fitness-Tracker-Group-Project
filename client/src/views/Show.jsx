@@ -11,8 +11,47 @@ function Show() {
     const [loading, setLoading] = useState(true);
     const token = localStorage.getItem('authToken')
     const [currentUser, setCurrentUser] = useState({})
+    const [likes, setLikes] = useState([])
     const { userId } = useParams()
-          
+    // const reload = () => window.location.reload
+
+    const reload = () => {
+        window.location.reload();
+    }
+
+    const [reloadd, setReloadd] = useState(!reload)
+          const addLike = () => {
+            axios.patch(`http://localhost:8000/user/${user._id}/${userId}/add`, {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              })
+              .then((res) => {
+                console.log(res);
+                setLikes(res.data.user.likes)
+                setReloadd(reload)
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          }
+
+          const removeLike = () => {
+            axios.patch(`http://localhost:8000/user/${user._id}/${userId}/remove`, {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              })
+              .then((res) => {
+                console.log(res);
+                setLikes(res.data.user.likes)
+                setReloadd(reload)
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          }
+
           useEffect (() => {
             if (user && token) {
               axios
@@ -24,6 +63,7 @@ function Show() {
                 .then((res) => {
                   setProfilePic(res.data.user.profilePic);
                   setCurrentUser(res.data.user);
+                  setLikes(res.data.user.likes)
                   console.log(res.data.user);
                   setLoading(false);
                 })
@@ -32,7 +72,7 @@ function Show() {
                   setLoading(false);
                 });
             }
-          },[loading]);
+          },[loading, userId, token]);
 
 
   return (
@@ -42,7 +82,7 @@ function Show() {
           <span className='ms-5 border rounded-circle border-black shadow' style={{height:"28vh", width:"15vw"}}>{ profilePic ? (<img className='d-flex justify-content-center border rounded-circle' alt='' src={`http://localhost:8000/public/images/${profilePic}`} style={{height:"100%", width:"100%", object:"fill"}} />) : (<img className='d-flex justify-content-center border rounded-circle' alt='' src={`http://localhost:8000/public/images/circled-user-icon-user-pro-icon-11553397069rpnu1bqqup.png`} style={{height:"100%", width:"100%", objectFit:"cover"}} />)}
             </span>
           <p className='mt-5 pb-1 display-6 fw-semibold border-bottom'>{currentUser.firstName} {currentUser.lastName}</p>
-          <p className='fw-semibold'>"This is my bio"</p>
+          <p className='fw-semibold'>"Welcome to my profile"</p>
           <div className='mt-5'>
           <Link to="/users">All Users</Link>
           <Logout />
@@ -72,14 +112,14 @@ function Show() {
                   <td>{activity.createdAt.split("T")[0].split("-").reverse().join("/")}</td>
                   <td>{activity.Duration} Min</td>
                   <td>{activity.Distance} m</td>
-                  <td>{activity.CaloriesBurned.toFixed(3)} Kcal</td>
+                  <td>{activity.CaloriesBurned.toFixed(3)} Cal</td>
                 </tr>)) : (<tr className='col-4 lead'>No Activities</tr>)}
               </tbody>
             </Table>
           </div>
           <>
-            {currentUser ? (<button className="bg-transparent border-0" style={{scale: "0.1", position: "absolute", top: "50%", right: "30%"}}><img className='' src="http://localhost:8000/public/reactions/like.png"/>{currentUser.likes}</button>)
-            : (<button className="bg-transparent border-0" style={{scale: "0.1", position: "absolute", top: "50%", right: "30%"}}><img className='' src="http://localhost:8000/public/reactions/dislike.png"/>0</button>)}
+            {currentUser.likes && currentUser.likes.length > 0 && currentUser.likes.includes(user._id) ? (<><button onClick={removeLike} className="bg-transparent border-0" style={{scale: "0.1", position: "absolute", top: "50%", right: "21%"}}><img className='' src="http://localhost:8000/public/reactions/Like.png" /></button><span className='display-6 fw-bold' style={{position: "absolute", bottom: "13%", right: "40%"}}>{likes?.length}</span></>)
+            : (<><button onClick={addLike} className="bg-transparent border-0" style={{scale: "0.1", position: "absolute", top: "50%", right: "21%"}}><img className='' src="http://localhost:8000/public/reactions/EmptyLike.png" /></button><span className='display-6 fw-bold' style={{position: "absolute", bottom: "13%", right: "40%"}}>{likes?.length}</span></>)}
           </>
         </div>
       </div>
